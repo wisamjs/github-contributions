@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/wzaghal/contributions-api/issues"
   },
-  "homepage": "https://github.com/wzaghal/contributions-api"
+  "homepage": "https://github.com/wzaghal/contributions-api",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "express": "^4.12.3",
+    "request-promise": "^0.4.2"
+  }
 }
