@@ -44,6 +44,3 @@ describe('getTextFromElement', function () {
   });
 
 });
-
-
-

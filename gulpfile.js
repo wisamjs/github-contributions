@@ -3,7 +3,7 @@ var mocha = require('gulp-mocha');
 var prettify = require('gulp-jsbeautifier');
 var eslint = require('gulp-eslint');
 
-var jsFiles = ['*.js', 'tests/**/*.test.js'];
+var jsFiles = ['*.js', 'lib/**/*.js', 'tests/**/*.test.js'];
 
 
 gulp.task('mocha-ci', function () {
