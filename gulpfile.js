@@ -7,7 +7,7 @@ var jsFiles = ['*.js', 'lib/**/*.js', 'tests/**/*.test.js'];
 
 
 gulp.task('mocha-ci', function () {
-  return gulp.src(jsFiles[1], {
+  return gulp.src(jsFiles[2], {
       read: false
     })
     .pipe(mocha({
