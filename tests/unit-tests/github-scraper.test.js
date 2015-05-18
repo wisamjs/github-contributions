@@ -4,7 +4,7 @@
 
 var expect = require('chai').expect;
 var rewire = require('rewire');
-var githubScraper = rewire('../lib/github-scraper');
+var githubScraper = rewire('../../lib/github-scraper');
 var toInt;
 var isInt;
 var getTextFromElement;
