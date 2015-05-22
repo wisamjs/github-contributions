@@ -1,6 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 var webdriverio = require('webdriverio');
+var bluebird = require('bluebird');
 
 describe('Github.com contributions', function () {
 
