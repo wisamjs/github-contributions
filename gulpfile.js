@@ -1,64 +1,91 @@
-var gulp = require('gulp');
-var mocha = require('gulp-mocha');
-var prettify = require('gulp-jsbeautifier');
-var eslint = require('gulp-eslint');
+const gulp = require('gulp');
+const $ = require('gulp-load-plugins')();
+const del = require('del');
+const path = require('path');
+const mkdirp = require('mkdirp');
+const isparta = require('isparta');
 
-var jsFiles = ['*.js', 'lib/**/*.js', 'tests/**/*.test.js',
-  'tests/e2e-tests/*.test.js'
-];
+const manifest = require('./package.json');
+const config = manifest.nodeBoilerplateOptions;
+const mainFile = manifest.main;
+const destinationFolder = path.dirname(mainFile);
 
-
-gulp.task('mocha-ci', function () {
-  return gulp.src(jsFiles[2], {
-      read: false
-    })
-    .pipe(mocha({
-      reporter: 'min'
-    }));
+// Remove the built files
+gulp.task('clean', function(cb) {
+  del([destinationFolder], cb);
 });
 
-gulp.task('beautify', function () {
-  gulp.src(jsFiles, {
-      base: '.'
-    })
-    .pipe(prettify({
-      config: '.jsbeautifyrc',
-      mode: 'VERIFY_AND_WRITE'
-    }))
-    .pipe(gulp.dest('.'));
+// Send a notification when JSHint fails,
+// so that you know your changes didn't build
+function jshintNotify(file) {
+  if (!file.jshint) { return; }
+  return file.jshint.success ? false : 'JSHint failed';
+}
+
+function jscsNotify(file) {
+  if (!file.jscs) { return; }
+  return file.jscs.success ? false : 'JSCS failed';
+}
+
+function createLintTask(taskName, files) {
+  gulp.task(taskName, function() {
+    return gulp.src(files)
+      .pipe($.plumber())
+      .pipe($.jshint())
+      .pipe($.jshint.reporter('jshint-stylish'))
+      .pipe($.notify(jshintNotify))
+      .pipe($.jscs())
+      .pipe($.notify(jscsNotify))
+      .pipe($.jshint.reporter('fail'));
+  });
+}
+
+// Lint our source code
+createLintTask('lint-src', ['src/**/*.js'])
+
+// Lint our test code
+createLintTask('lint-test', ['test/**/*.js'])
+
+// Build two versions of the library
+gulp.task('build', ['clean'], function() {
+
+  // Create our output directory
+  mkdirp.sync(destinationFolder);
+  return gulp.src('src/**/*.js')
+    .pipe($.plumber())
+    .pipe($.babel({ blacklist: ['useStrict'] }))
+    .pipe(gulp.dest(destinationFolder));
 });
 
-gulp.task('beautify:build', function () {
-  gulp.src(jsFiles)
-    .pipe(prettify({
-      config: '.jsbeautifyrc',
-      mode: 'VERIFY_ONLY'
-    }));
+function test() {
+  return gulp.src(['test/setup/node.js', 'test/unit/**/*.js', 'test/e2e/**/*.js'], {read: false})
+    .pipe($.plumber())
+    .pipe($.mocha({reporter: 'dot', globals: config.mochaGlobals}));
+}
+
+// Make babel preprocess the scripts the user tries to import from here on.
+require('babel/register');
+
+gulp.task('coverage', function(done) {
+  gulp.src(['src/*.js'])
+    .pipe($.plumber())
+    .pipe($.istanbul({ instrumenter: isparta.Instrumenter }))
+    .pipe($.istanbul.hookRequire())
+    .on('finish', function() {
+      return test()
+      .pipe($.istanbul.writeReports())
+      .on('end', done);
+    });
 });
 
 
-/**
- * JavaScript Linting Task
- */
-gulp.task('lint', function () {
-  return gulp.src(jsFiles)
-    .pipe(eslint())
-    .pipe(eslint.format());
+// Lint and run our tests
+gulp.task('test', test);
+
+// Run the headless unit tests as you make changes.
+gulp.task('watch', ['test'], function() {
+  gulp.watch(['src/**/*', 'test/**/*', 'package.json', '**/.jshintrc', '.jscsrc'], ['test']);
 });
 
-/**
- * JavaScript Build Lint Task
- */
-gulp.task('lint:build', function () {
-  return gulp.src(jsFiles)
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failOnError());
-});
-
-gulp.task('mocha-watch', function () {
-  gulp.watch(jsFiles, ['mocha-ci']);
-});
-
-gulp.task('default', ['beautify', 'mocha-watch']);
-gulp.task('test', ['beautify:build', 'lint:build', 'mocha-ci']);
+// An alias of test
+gulp.task('default', ['test']);

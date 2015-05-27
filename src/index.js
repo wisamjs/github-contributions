@@ -1,9 +1,9 @@
-  'use strict';
-  var express = require('express');
-  var app = express();
-  var rp = require('request-promise');
-  var githubScraper = require('./lib/github-scraper');
-  var port = 8081;
+'use strict';
+import express from 'express';
+import rp from 'request-promise';
+import githubScraper from './github-scraper';
+var app = express();
+var port = 8081;
 
   app.get('/contributions/:userId', function (req, res) {
     var userId = req.params.userId;
@@ -20,4 +20,4 @@
 
 
   //Expose app
-  exports = module.exports = app;
+  export default app;

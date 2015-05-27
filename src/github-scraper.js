@@ -1,5 +1,5 @@
 'use strict';
-var cheerio = require('cheerio');
+import * as cheerio from 'cheerio';
 var $;
 
 function getTextFromElement() {
@@ -29,10 +29,10 @@ function getYearContributions() {
 
 }
 
-
-module.exports = function () {
-  return {
+export default {
     getContributions: getContributions,
-    getYearContributions: getYearContributions
+    getYearContributions: getYearContributions,
+    toInt: toInt,
+    isInt: isInt,
+    getTextFromElement: getTextFromElement
   };
-}();
