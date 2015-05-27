@@ -5,24 +5,12 @@
   "main": "dist/library-dist.js",
   "scripts": {
     "test": "gulp",
-    "test-browser": "gulp test-browser",
     "build": "gulp build",
-    "coverage": "gulp coverage"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/wzaghal/contributions-api.git"
   },
-  "keywords": [
-    "boilerplate",
-    "es6",
-    "node",
-    "starter",
-    "kit",
-    "transpile",
-    "6to5",
-    "babel"
-  ],
   "author": "Wisam Zaghal <wisamzaghal@gmail.com> (http://wisam.io/)",
   "license": "MIT",
   "bugs": {
