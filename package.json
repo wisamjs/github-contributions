@@ -73,5 +73,18 @@
       "spy",
       "expect"
     ]
+  },
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "express": "^4.12.4",
+    "request-promise": "^0.4.2",
+    "webdriverio": "^2.4.5"
+  },
+  "nodeBoilerplateOptions": {
+    "mochaGlobals": [
+      "stub",
+      "spy",
+      "expect"
+    ]
   }
 }

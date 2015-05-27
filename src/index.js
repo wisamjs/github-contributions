@@ -1,6 +1,6 @@
 'use strict';
-import * as express from 'express';
-import * as rp from 'request-promise';
+import express from 'express';
+import rp from 'request-promise';
 import githubScraper from './github-scraper';
 var app = express();
 var port = 8081;

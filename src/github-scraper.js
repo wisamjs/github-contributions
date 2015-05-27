@@ -31,5 +31,8 @@ function getYearContributions() {
 
 export default {
     getContributions: getContributions,
-    getYearContributions: getYearContributions
+    getYearContributions: getYearContributions,
+    toInt: toInt,
+    isInt: isInt,
+    getTextFromElement: getTextFromElement
   };
