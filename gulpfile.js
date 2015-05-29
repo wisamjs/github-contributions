@@ -105,7 +105,7 @@ gulp.task('coverage', function (done) {
 
 
 // Lint and run our tests
-gulp.task('test', ['lint-src-fail-on-error', 'lint-test-fail-on-error'], test);
+gulp.task('test', ['lint-src-strict', 'lint-test-strict'], test);
 gulp.task('soft-test', ['lint-src', 'lint-test'], test);
 
 // Run the headless unit tests as you make changes.
