@@ -4,6 +4,7 @@ const del = require('del');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const isparta = require('isparta');
+const eslint = require('gulp-eslint');
 
 const manifest = require('./package.json');
 const config = manifest.nodeBoilerplateOptions;
@@ -15,28 +16,13 @@ gulp.task('clean', function(cb) {
   del([destinationFolder], cb);
 });
 
-// Send a notification when JSHint fails,
-// so that you know your changes didn't build
-function jshintNotify(file) {
-  if (!file.jshint) { return; }
-  return file.jshint.success ? false : 'JSHint failed';
-}
-
-function jscsNotify(file) {
-  if (!file.jscs) { return; }
-  return file.jscs.success ? false : 'JSCS failed';
-}
 
 function createLintTask(taskName, files) {
   gulp.task(taskName, function() {
     return gulp.src(files)
-      .pipe($.plumber())
-      .pipe($.jshint())
-      .pipe($.jshint.reporter('jshint-stylish'))
-      .pipe($.notify(jshintNotify))
-      .pipe($.jscs())
-      .pipe($.notify(jscsNotify))
-      .pipe($.jshint.reporter('fail'));
+      .pipe(eslint())
+      .pipe(eslint.format())
+      .pipe(eslint.failOnError());
   });
 }
 
@@ -47,7 +33,7 @@ createLintTask('lint-src', ['src/**/*.js'])
 createLintTask('lint-test', ['test/**/*.js'])
 
 // Build two versions of the library
-gulp.task('build', ['clean'], function() {
+gulp.task('build', ['lint-src','clean'], function() {
 
   // Create our output directory
   mkdirp.sync(destinationFolder);
@@ -80,7 +66,7 @@ gulp.task('coverage', function(done) {
 
 
 // Lint and run our tests
-gulp.task('test', test);
+gulp.task('test', ['lint-src', 'lint-test'], test);
 
 // Run the headless unit tests as you make changes.
 gulp.task('watch', ['test'], function() {

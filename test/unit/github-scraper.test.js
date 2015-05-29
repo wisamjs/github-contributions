@@ -36,10 +36,10 @@ describe('githubScraper.isInt', function () {
   });
 
   it('should return true if number is passed in', function () {
-    expect(githubScraper.isInt(1)).to.be.true;
-    expect(githubScraper.isInt(2.5)).to.be.true;
-    expect(githubScraper.isInt({})).to.be.false;
-    expect(githubScraper.isInt('2')).to.be.false;
+    expect(githubScraper.isInt(1)).to.eql(true);
+    expect(githubScraper.isInt(2.5)).to.eql(true);
+    expect(githubScraper.isInt({})).to.eql(false);
+    expect(githubScraper.isInt('2')).to.eql(false);
   });
 
 });
