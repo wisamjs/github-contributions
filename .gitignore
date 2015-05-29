@@ -5,6 +5,8 @@ logs
 # Coverage directory used by tools like istanbul
 coverage
 
+#Build
+dist
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
