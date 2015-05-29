@@ -4,7 +4,7 @@ import rp from 'request-promise';
 import githubScraper from './github-scraper';
 
 let app = express();
-const port = 8081
+const port = 8081;
 
 app.get('/contributions/:userId', function (req, res) {
   const userId = req.params.userId;
