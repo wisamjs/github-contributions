@@ -2,18 +2,19 @@
 import express from 'express';
 import rp from 'request-promise';
 import githubScraper from './github-scraper';
-var app = express();
-var port = 8081;
+
+let app = express();
+const port = 8081;
 
   app.get('/contributions/:userId', function (req, res) {
-    var userId = req.params.userId;
+    const userId = req.params.userId;
 
     rp('http://github.com/' + userId)
-      .then(githubScraper.getContributions)
+      .then(githubScraper.getContributionsJson)
       .then(function (data) {
         //TODO: data should be valid JSON
-        res.json(data);
-      });
+         res.json(data);
+       });
   });
 
   app.listen(port);
