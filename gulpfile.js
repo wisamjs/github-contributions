@@ -5,6 +5,7 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const isparta = require('isparta');
 const eslint = require('gulp-eslint');
+const prettify = require('gulp-jsbeautifier');
 
 const manifest = require('./package.json');
 const config = manifest.nodeBoilerplateOptions;
@@ -19,10 +20,16 @@ gulp.task('clean', function(cb) {
 
 function createLintTask(taskName, files) {
   gulp.task(taskName, function() {
-    return gulp.src(files)
+    return gulp.src(files,{
+      base: '.'
+    })
       .pipe(eslint())
       .pipe(eslint.format())
-      .pipe(eslint.failOnError());
+      .pipe(prettify({
+      config: '.jsbeautifyrc',
+      mode: 'VERIFY_AND_WRITE'
+    }))
+    .pipe(gulp.dest('.'));
   });
 }
 
