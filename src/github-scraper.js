@@ -1,27 +1,45 @@
 'use strict';
 import * as cheerio from 'cheerio';
-var $;
 
 
-function transformHTML() {
-  var infoHTML = $(this).find('.text-muted');
-  var totalHTML = $(this).find('.contrib-number');
+function transformStatsHTML($) {
+  return function (index, domElement) {
+    var infoHTML = $(domElement).find('.text-muted');
+    var totalHTML = $(domElement).find('.contrib-number');
 
-  return {
-    label: infoHTML.first().text(),
-    total: totalHTML.first().text(),
-    dates: infoHTML.last().text()
+    return {
+      label: infoHTML.first().text(),
+      total: totalHTML.first().text(),
+      dates: infoHTML.last().text()
+    };
   };
 }
 
-function getContributionsJson(html) {
-  $ = cheerio.load(html);
-
-  return head($('.contrib-column').map(transformHTML).toArray());
+function transformGraphHTML($) {
+  return function (index, domElement) {
+    return {
+      date: $(domElement).data('date'),
+      count: $(domElement).data('count')
+    };
+  };
 }
 
-function getYearContributions() {
+function getContributionsStats($) {
+  return head($('.contrib-column').map(transformStatsHTML($)).toArray());
 
+}
+
+function getContributionsJson(html) {
+  var $ = cheerio.load(html);
+  return {
+    'stats': getContributionsStats($),
+    'calendar': getContributionsGraph($)
+  };
+}
+
+function getContributionsGraph($) {
+  return $('.js-calendar-graph-svg').find('g rect')
+    .map(transformGraphHTML($)).toArray();
 }
 
 function head(arr) {
@@ -31,6 +49,9 @@ function head(arr) {
 
 export default {
   getContributionsJson: getContributionsJson,
-  getYearContributions: getYearContributions,
-  transformHTML: transformHTML
+  getContributionsStats: getContributionsStats,
+  getContributionsGraph: getContributionsGraph,
+  transformStatsHTML: transformStatsHTML,
+  transformGraphHTML: transformGraphHTML,
+  head: head
 };

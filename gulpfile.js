@@ -73,6 +73,18 @@ gulp.task('build', ['lint-src', 'clean'], function () {
     .pipe(gulp.dest(destinationFolder));
 });
 
+gulp.task('dev-build', ['lint-src'], function () {
+
+  // Create our output directory
+  mkdirp.sync(destinationFolder);
+  return gulp.src('src/**/*.js')
+    .pipe($.plumber())
+    .pipe($.babel({
+      blacklist: ['useStrict']
+    }))
+    .pipe(gulp.dest(destinationFolder));
+});
+
 function test() {
   return gulp.src(['test/setup/node.js', 'test/unit/**/*.js',
       'test/e2e/**/*.js'
@@ -109,10 +121,13 @@ gulp.task('test', ['lint-src-strict', 'lint-test-strict'], test);
 gulp.task('soft-test', ['lint-src', 'lint-test'], test);
 
 // Run the headless unit tests as you make changes.
-gulp.task('watch', ['soft-test'], function () {
-  gulp.watch(['src/**/*', 'test/**/*', 'package.json', '**/.jshintrc',
-    '.jscsrc'
-  ], ['test']);
+gulp.task('watch', function () {
+  gulp.watch(['src/**/*', 'test/**/*', 'package.json'], ['soft-test']);
+});
+
+gulp.task('dev', function () {
+  gulp.watch(['src/**/*'], ['dev-build']);
+
 });
 
 // An alias of test
