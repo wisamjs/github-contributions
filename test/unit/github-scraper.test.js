@@ -10,12 +10,6 @@ describe('githubScraper', function () {
     expect(githubScraper.head).to.be.a('Function');
   });
 
-  describe('githubScraper.head', function () {
-    it('should return the first element of an array', function () {
-      expect(githubScraper.head([1, 2, 3])).to.eql(1);
-    });
-  });
-
   describe('githubScraper.transformStatsHTML', function () {
     it('should return a function', function () {
       expect(githubScraper.transformStatsHTML()).to.be.a(

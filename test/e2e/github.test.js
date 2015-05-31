@@ -7,7 +7,8 @@ describe('Github.com contributions', function () {
 
   this.timeout(99999999);
   var client = {};
-  var htmlResponse;
+  var contribColumnHtmlResponse;
+  var textMutedHtmlResponse;
   var errResponse;
   before(function (done) {
     client = webdriverio.remote({
@@ -17,33 +18,54 @@ describe('Github.com contributions', function () {
     });
     client.init()
       .url('https://github.com/octocat')
-      .getHTML('.contrib-number', false, function (err, html) {
+      .getHTML('.contrib-column', false, function (err, html) {
         errResponse = err;
-        htmlResponse = html;
+        contribColumnHtmlResponse = html;
+      })
+      .getHTML('.text-muted', false, function (err, html) {
+        textMutedHtmlResponse = html;
+
       })
       .call(done);
   });
 
   it('should return html', function () {
     expect(errResponse).to.eql(null);
-    expect(htmlResponse).to.not.eql(null);
+    expect(contribColumnHtmlResponse).to.not.eql(null);
   });
 
 
   it('should have 3 contributions', function () {
-    expect(htmlResponse.length).to.eql(3);
+    expect(contribColumnHtmlResponse.length).to.eql(3);
   });
 
-  it('should show last year\'s contributions', function () {
-    expect(htmlResponse[0]).to.eql('2 total');
+  it('should have all labels', function () {
+    expect(textMutedHtmlResponse).to.be.an('Array');
+    expect(textMutedHtmlResponse.indexOf(
+      'Contributions in the last year')).to.be.above(-
+      1);
+    expect(textMutedHtmlResponse.indexOf(
+      'Longest streak')).to.be.above(-
+      1);
+    expect(textMutedHtmlResponse.indexOf(
+      'Current streak')).to.be.above(-
+      1);
+
   });
 
-  it('should show longest streak', function () {
-    expect(htmlResponse[1]).to.eql('2 days');
-  });
-
-  it('should show current streak', function () {
-    expect(htmlResponse[2]).to.eql('0 days');
+  it('should have all dates', function () {
+    console.log(textMutedHtmlResponse);
+    expect(textMutedHtmlResponse.indexOf(
+      'May 29, 2014 – May 29, 2015')).to.be.above(-
+      1);
+    expect(textMutedHtmlResponse.indexOf(
+      'June 10 –June 11'
+    )).to.be.above(-
+      1);
+    expect(textMutedHtmlResponse.indexOf(
+      'Last contributed a year ago'
+    )).to.be.above(-
+      1);
   });
 
   after(function (done) {

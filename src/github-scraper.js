@@ -25,7 +25,7 @@ function transformGraphHTML($) {
 }
 
 function getContributionsStats($) {
-  return head($('.contrib-column').map(transformStatsHTML($)).toArray());
+  return $('.contrib-column').map(transformStatsHTML($)).toArray();
 
 }
 
@@ -42,16 +42,17 @@ function getContributionsGraph($) {
     .map(transformGraphHTML($)).toArray();
 }
 
-function head(arr) {
-  return arr[0];
+function cleanWhiteSpace(str) {
+
+  str.replace()
 
 }
+
 
 export default {
   getContributionsJson: getContributionsJson,
   getContributionsStats: getContributionsStats,
   getContributionsGraph: getContributionsGraph,
   transformStatsHTML: transformStatsHTML,
-  transformGraphHTML: transformGraphHTML,
-  head: head
+  transformGraphHTML: transformGraphHTML
 };
