@@ -42,12 +42,6 @@ function getContributionsGraph($) {
     .map(transformGraphHTML($)).toArray();
 }
 
-function cleanWhiteSpace(str) {
-
-  str.replace()
-
-}
-
 
 export default {
   getContributionsJson: getContributionsJson,

@@ -7,7 +7,6 @@ describe('githubScraper', function () {
     expect(githubScraper.getContributionsGraph).to.be.a('Function');
     expect(githubScraper.transformStatsHTML).to.be.a('Function');
     expect(githubScraper.transformGraphHTML).to.be.a('Function');
-    expect(githubScraper.head).to.be.a('Function');
   });
 
   describe('githubScraper.transformStatsHTML', function () {
