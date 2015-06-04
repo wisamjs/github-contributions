@@ -11,9 +11,7 @@ app.get('/contributions/:userId', function (req, res) {
 
   rp('http://github.com/' + userId)
     .then(githubScraper.getContributionsJson)
-    .then(function (data) {
-      res.json(data);
-    });
+    .then(data => res.json(data));
 });
 
 app.listen(port);

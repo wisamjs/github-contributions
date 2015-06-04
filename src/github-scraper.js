@@ -4,8 +4,8 @@ import * as cheerio from 'cheerio';
 
 function transformStatsHTML($) {
   return function (index, domElement) {
-    var infoHTML = $(domElement).find('.text-muted');
-    var totalHTML = $(domElement).find('.contrib-number');
+    let infoHTML = $(domElement).find('.text-muted');
+    let totalHTML = $(domElement).find('.contrib-number');
 
     return {
       label: infoHTML.first().text(),
@@ -30,7 +30,7 @@ function getContributionsStats($) {
 }
 
 function getContributionsJson(html) {
-  var $ = cheerio.load(html);
+  let $ = cheerio.load(html);
   return {
     'stats': getContributionsStats($),
     'calendar': getContributionsGraph($)
