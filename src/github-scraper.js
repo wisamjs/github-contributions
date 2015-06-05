@@ -1,5 +1,6 @@
 'use strict';
 import * as cheerio from 'cheerio';
+import rp from 'request-promise';
 
 
 function transformStatsHTML($) {
@@ -13,6 +14,11 @@ function transformStatsHTML($) {
       dates: infoHTML.last().text()
     };
   };
+}
+
+function getContributions(userId) {
+  return rp('http://github.com/' + userId)
+    .then(parseContributions);
 }
 
 function transformGraphHTML($) {
@@ -29,7 +35,7 @@ function getContributionsStats($) {
 
 }
 
-function getContributionsJson(html) {
+function parseContributions(html) {
   let $ = cheerio.load(html);
   return {
     'stats': getContributionsStats($),
@@ -44,9 +50,10 @@ function getContributionsGraph($) {
 
 
 export default {
-  getContributionsJson: getContributionsJson,
+  parseContributions: parseContributions,
   getContributionsStats: getContributionsStats,
   getContributionsGraph: getContributionsGraph,
   transformStatsHTML: transformStatsHTML,
-  transformGraphHTML: transformGraphHTML
+  transformGraphHTML: transformGraphHTML,
+  getContributions: getContributions
 };
